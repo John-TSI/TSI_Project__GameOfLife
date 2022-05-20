@@ -3,7 +3,7 @@
 
 #include<unordered_map>
 #include<array>
-//#include<string>
+#include<string>
 
 using Seed = std::array<int, 50/* (_Game::Manager::cols)*(_Game::Manager::rows) */>;
 //using Grid = std::array<std::array<int, (_Game::Manager::cols)>, (_Game::Manager::rows)>;
@@ -15,10 +15,10 @@ namespace _Game
     static std::unordered_map<int,char> symbolMap = {
         {State::Dead, '.'}, 
         {State::Alive, '@'}, };
-/*     static std::unordered_map<int,std::string> symbolMap2 = {
+ /*    static std::unordered_map<int,std::string> symbolMap2 = {
         {State::Dead, "\x25A2"}, 
-        {State::Alive, "\x25A3"}, };
-    static std::unordered_map<int,char> symbolMap3 = {
+        {State::Alive, "\x25A3"}, }; */
+    /*static std::unordered_map<int,char> symbolMap3 = {
         {State::Dead, '▢'}, 
         {State::Alive, '▣'}, }; */
 
@@ -27,30 +27,25 @@ namespace _Game
     {
         // --- attributes ---
         static const int cols = 10, rows = 5;
-        /* int seed[cols*rows]{
-            0,0,0,0,0,0,0,0,0,1,
-            0,0,0,0,0,0,0,0,1,0,
-            0,0,0,0,0,0,0,0,0,0,
-            0,1,0,0,0,0,0,0,0,0,
-            0,0,0,0,0,0,0,0,0,1,
-            }; */
-        Seed seed = {
+        Seed seed
+        {
             0,0,0,0,0,0,0,0,0,1,
             0,0,0,0,0,0,0,0,1,0,
             0,0,0,0,0,0,0,0,0,0,
             0,1,0,0,0,0,0,0,0,0,
             0,0,0,0,0,0,0,0,0,1
-            };
-        //int gameGrid[cols][rows]{};
+        };
         Grid gameGrid{};
 
-        // --- methods ---
-       // void SeedInitialiseGrid(int[cols*rows]);
-        void SeedInitialiseGrid(Seed);
+        // --- initialise ---
+        void SeedInitialiseGrid(Seed&);
         void RandomInitialiseGrid();
-        //void PrintGrid(int[cols][rows]);
-        void PrintGrid(Grid);
 
+        // --- utility ---
+        Grid GenerateAdjacencyMatrix(Grid&);
+
+        // --- output ---
+        void PrintGrid(Grid&);
         void Run();
     };
 }    

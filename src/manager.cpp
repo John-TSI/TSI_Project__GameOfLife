@@ -4,15 +4,14 @@
 #include"../inc/manager.hpp"
 
 
-//void _Game::Manager::SeedInitialiseGrid(int seed[cols*rows])
-void _Game::Manager::SeedInitialiseGrid(Seed seed)
+// --- initialise ---
+void _Game::Manager::SeedInitialiseGrid(Seed& seed)
 {
-    for(int i=0; i<rows; i++)
+    for(int r=0; r<rows; r++)
     {
-        for(int j=0; j<cols; j++)
+        for(int c=0; c<cols; c++)
         {
-            //gameGrid[j][i] = State( seed[i*cols + j] );
-            gameGrid[i][j] = State( seed[i*cols + j] );
+            gameGrid[r][c] = State( seed[r*cols + c] );
         }
     }
 }
@@ -20,26 +19,42 @@ void _Game::Manager::SeedInitialiseGrid(Seed seed)
 void _Game::Manager::RandomInitialiseGrid()
 {
     srand(time(NULL));
-    for(int i=0; i<rows; i++)
+    for(int r=0; r<rows; r++)
     {
-        for(int j=0; j<cols; j++)
+        for(int c=0; c<cols; c++)
         {
-            gameGrid[j][i] = State(rand()%2);
+            gameGrid[r][c] = State(rand()%2);
         }
     }
 }
 
-//void _Game::Manager::PrintGrid(int grid[cols][rows])
-void _Game::Manager::PrintGrid(Grid grid)
+
+// --- utility ---
+Grid _Game::Manager::GenerateAdjacencyMatrix(Grid& grid)
 {
-    //grid[3][4] = 1;
-    std::cout << "\n";
-    for(int i=0; i<rows; i++)
+    Grid adjGrid{};
+    for(int r=0; r<rows; r++)
     {
-        for(int j=0; j<cols; j++)
+        for(int c=0; c<cols; c++)
         {
-            //std::cout << std::setw(2) << symbolMap[ grid[j][i] ];
-            std::cout << std::setw(2) << symbolMap[ grid[i][j] ];
+            int count = 0;
+            //if(grid[r][c]) // RESUME HERE
+        }
+    }
+    return adjGrid;
+}
+
+// --- output ---
+void _Game::Manager::PrintGrid(Grid& grid)
+{
+    std::cout << "\n";
+    for(int r=0; r<rows; r++)
+    {
+        for(int c=0; c<cols; c++)
+        {
+/*             gameGrid[i][j] = State::Dead;
+            gameGrid[1][5] = State::Alive; */
+            std::cout << std::setw(2) << symbolMap[ grid[r][c] ];
         }
         std::cout << "\n";
     }
@@ -47,7 +62,7 @@ void _Game::Manager::PrintGrid(Grid grid)
 
 void _Game::Manager::Run()
 {
-    SeedInitialiseGrid(seed);
-    //RandomInitialiseGrid();
+    //SeedInitialiseGrid(seed);
+    RandomInitialiseGrid();
     PrintGrid(gameGrid);
 }
