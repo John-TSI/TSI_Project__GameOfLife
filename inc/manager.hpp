@@ -40,7 +40,10 @@ namespace _Game
         void RandomInitialiseGrid();
 
         // --- utility ---
-        Grid GenerateAdjacencyMatrix(Grid&);
+        int CountNeighbours(Grid&, const int, const int);
+        bool CellLives(bool, const int);
+        //Grid GenerateAdjacencyMatrix(Grid&);
+        Grid AdvanceCellGrid(Grid&);
 
         // --- output ---
         void PrintGrid(Grid&);
