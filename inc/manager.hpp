@@ -13,15 +13,15 @@ namespace _Game
     using Seed = std::array<int, COLS*ROWS>;
     using Grid = std::array<std::array<int, COLS>, ROWS>;
 
-    enum State{Dead, Alive};
+    enum CellState{Dead, Alive};
     static std::unordered_map<int,std::string> symbolMap
     {
-        {State::Dead, "□"}, 
-        {State::Alive, "■"},
+        {CellState::Dead, "□"}, 
+        {CellState::Alive, "■"},
     };
 
 
-    struct Manager
+    struct CellsManager
     {
         Seed seed
         {
@@ -32,7 +32,7 @@ namespace _Game
             0,0,0,0,0,0,0,0,0,1
         };
 
-        Grid gameGrid{};
+        Grid initGrid{};
 
 
         // --- initialise ---
@@ -42,7 +42,6 @@ namespace _Game
         // --- utility ---
         int CountNeighbours(Grid&, const int, const int);
         bool CellLives(bool, const int);
-        //Grid GenerateAdjacencyMatrix(Grid&);
         Grid AdvanceCellGrid(Grid&);
 
         // --- output ---
