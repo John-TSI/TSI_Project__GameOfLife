@@ -1,6 +1,6 @@
 #include<iostream>
 #include<iomanip>
-#include<limits>
+#include<windows.h>
 #include<time.h>
 #include<chrono>
 #include<thread>
@@ -68,6 +68,18 @@ _Game::Grid _Game::CellsManager::AdvanceCellGrid(Grid& grid) // change to modify
 
 
 // --- output ---
+void _Game::CellsManager::ClearScreen()
+{
+    COORD cursorPosition;
+    cursorPosition.X = 0;
+    cursorPosition.Y = 0;
+    SetConsoleCursorPosition
+    (
+        GetStdHandle(STD_OUTPUT_HANDLE), 
+        cursorPosition
+    );
+}
+
 void _Game::CellsManager::PrintGrid(Grid& grid)
 {
     std::cout << "\n";
@@ -83,22 +95,17 @@ void _Game::CellsManager::PrintGrid(Grid& grid)
 
 void _Game::CellsManager::Run()
 {
-    //system("clear"); // clear the console
-    system("cls");
+    system("cls||clear");
 
     //SeedInitialiseGrid(seed);
     RandomInitialiseGrid();
 
-    // --- loop begins ---
     while(true)
     {
-        //printf("\e[?25l"); // hide cursor
         PrintGrid(cellGrid);
         cellGrid = AdvanceCellGrid(cellGrid);
-
         //std::cin.ignore(); // wait for key input
         std::this_thread::sleep_for(std::chrono::milliseconds(1200));
-        //system("clear");
-        system("cls");
+        ClearScreen();
     }
 }

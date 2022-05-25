@@ -46,6 +46,7 @@ namespace _Game
         Grid AdvanceCellGrid(Grid&);
 
         // --- output ---
+        void ClearScreen();
         void PrintGrid(Grid&);
         void Run();
     };
