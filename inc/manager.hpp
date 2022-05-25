@@ -14,10 +14,11 @@ namespace _Game
     using Grid = std::array<std::array<int, COLS>, ROWS>;
 
     enum CellState{Dead, Alive};
+
     static std::unordered_map<int,std::string> symbolMap
     {
-        {CellState::Dead, "□"}, 
-        {CellState::Alive, "■"},
+        {CellState::Dead, /* "□" */ "~"}, 
+        {CellState::Alive, /* "■" */ "O"},
     };
 
 
@@ -32,7 +33,7 @@ namespace _Game
             0,0,0,0,0,0,0,0,0,1
         };
 
-        Grid initGrid{};
+        Grid cellGrid{};
 
 
         // --- initialise ---

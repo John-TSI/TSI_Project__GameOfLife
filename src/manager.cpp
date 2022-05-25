@@ -1,7 +1,12 @@
 #include<iostream>
 #include<iomanip>
+#include<limits>
 #include<time.h>
+#include<chrono>
+#include<thread>
 #include"../inc/manager.hpp"
+#include"../inc/mingw.invoke.h"
+#include"../inc/mingw.thread.h"
 
 
 // --- initialise ---
@@ -11,7 +16,7 @@ void _Game::CellsManager::SeedInitialiseGrid(Seed& seed)
     {
         for(int c=0; c<COLS; c++)
         {
-            initGrid[r][c] = CellState( seed[r*COLS + c] );
+            cellGrid[r][c] = CellState( seed[r*COLS + c] );
         }
     }
 }
@@ -23,7 +28,7 @@ void _Game::CellsManager::RandomInitialiseGrid()
     {
         for(int c=0; c<COLS; c++)
         {
-            initGrid[r][c] = CellState( (int) (rand()%10 < 3) );
+            cellGrid[r][c] = CellState( (int) (rand()%10 < 3) );
         }
     }
 }
@@ -78,9 +83,22 @@ void _Game::CellsManager::PrintGrid(Grid& grid)
 
 void _Game::CellsManager::Run()
 {
+    //system("clear"); // clear the console
+    system("cls");
+
     //SeedInitialiseGrid(seed);
     RandomInitialiseGrid();
-    PrintGrid(initGrid);
-    Grid nextGrid = AdvanceCellGrid(initGrid);
-    PrintGrid(nextGrid);
+
+    // --- loop begins ---
+    while(true)
+    {
+        //printf("\e[?25l"); // hide cursor
+        PrintGrid(cellGrid);
+        cellGrid = AdvanceCellGrid(cellGrid);
+
+        //std::cin.ignore(); // wait for key input
+        std::this_thread::sleep_for(std::chrono::milliseconds(1200));
+        //system("clear");
+        system("cls");
+    }
 }
