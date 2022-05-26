@@ -5,8 +5,8 @@
 #include<chrono>
 #include<thread>
 #include"../inc/manager.hpp"
-#include"../inc/mingw.invoke.h"
-#include"../inc/mingw.thread.h"
+//#include"../inc/mingw.invoke.h"
+//#include"../inc/mingw.thread.h" 
 
 
 // --- initialise ---
@@ -35,6 +35,19 @@ void _Game::CellsManager::RandomInitialiseGrid()
 
 
 // --- utility ---
+int _Game::CellsManager::CountAllCells(Grid& grid)
+{
+    int totalCellCount = 0;
+    for(int r=0; r<ROWS; r++)
+    {
+        for(int c=0; c<COLS; c++)
+        {
+            if(cellGrid[r][c] == CellState::Alive) { ++totalCellCount; }
+        }
+    }
+    return totalCellCount;
+}
+
 int _Game::CellsManager::CountNeighbours(Grid& grid, const int row, const int col)
 {
     return 
@@ -70,14 +83,8 @@ _Game::Grid _Game::CellsManager::AdvanceCellGrid(Grid& grid) // change to modify
 // --- output ---
 void _Game::CellsManager::ClearScreen()
 {
-    COORD cursorPosition;
-    cursorPosition.X = 0;
-    cursorPosition.Y = 0;
-    SetConsoleCursorPosition
-    (
-        GetStdHandle(STD_OUTPUT_HANDLE), 
-        cursorPosition
-    );
+    COORD cursorPosition(0,0);
+    SetConsoleCursorPosition( GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition );
 }
 
 void _Game::CellsManager::PrintGrid(Grid& grid)
@@ -91,6 +98,14 @@ void _Game::CellsManager::PrintGrid(Grid& grid)
         }
         std::cout << "\n";
     }
+    std::cout << "\n";
+}
+
+void _Game::CellsManager::PrintInfo()
+{
+    std::cout << "Generation " << std::setfill('0') << std::setw(2) << ++generationCount << " :\n";
+    std::cout << std::setfill('0') << std::setw(2) << CountAllCells(cellGrid) << " cells are alive.\n";
+    std::cout <<  std::setfill(' ');
 }
 
 void _Game::CellsManager::Run()
@@ -103,6 +118,7 @@ void _Game::CellsManager::Run()
     while(true)
     {
         PrintGrid(cellGrid);
+        PrintInfo();
         cellGrid = AdvanceCellGrid(cellGrid);
         //std::cin.ignore(); // wait for key input
         std::this_thread::sleep_for(std::chrono::milliseconds(1200));

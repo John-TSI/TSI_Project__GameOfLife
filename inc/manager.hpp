@@ -8,7 +8,7 @@
 
 namespace _Game
 {
-    static const int COLS = 10, ROWS = 5;
+    static const int COLS{10}, ROWS{5};
     
     using Seed = std::array<int, COLS*ROWS>;
     using Grid = std::array<std::array<int, COLS>, ROWS>;
@@ -24,6 +24,7 @@ namespace _Game
 
     struct CellsManager
     {
+        int generationCount{0};
         Seed seed
         {
             0,0,0,0,0,0,0,0,0,1,
@@ -41,6 +42,7 @@ namespace _Game
         void RandomInitialiseGrid();
 
         // --- utility ---
+        int CountAllCells(Grid&);
         int CountNeighbours(Grid&, const int, const int);
         bool CellLives(bool, const int);
         Grid AdvanceCellGrid(Grid&);
@@ -48,6 +50,7 @@ namespace _Game
         // --- output ---
         void ClearScreen();
         void PrintGrid(Grid&);
+        void PrintInfo();
         void Run();
     };
 }    
