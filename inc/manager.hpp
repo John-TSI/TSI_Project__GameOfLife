@@ -34,21 +34,28 @@ namespace _Game
             0,0,0,0,0,0,0,0,0,1
         };
 
-        Grid cellGrid{};
+        Grid initGrid{}, cellGrid{};
 
 
         // --- initialise ---
         void SeedInitialiseGrid(Seed&);
         void RandomInitialiseGrid();
 
+        // --- restart / pause ---
+        void Restart();
+        void Pause();
+        char CheckForUserInput();
+        void ProcessUserInput(const char&);
+
         // --- utility ---
         int CountAllCells(Grid&);
         int CountNeighbours(Grid&, const int, const int);
         bool CellLives(bool, const int);
-        Grid AdvanceCellGrid(Grid&);
+        void AdvanceCellGrid(Grid&);
 
         // --- output ---
         void ClearScreen();
+        void PrintCommands();
         void PrintGrid(Grid&);
         void PrintInfo();
         void Run();

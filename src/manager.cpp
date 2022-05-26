@@ -1,6 +1,8 @@
 #include<iostream>
 #include<iomanip>
-#include<windows.h>
+#include<limits>
+#include<windows.h> // ClearScreen()
+#include<conio.h> // getch()
 #include<time.h>
 #include<chrono>
 #include<thread>
@@ -19,6 +21,8 @@ void _Game::CellsManager::SeedInitialiseGrid(Seed& seed)
             cellGrid[r][c] = CellState( seed[r*COLS + c] );
         }
     }
+    // store initial configuration for calls to Restart()
+    initGrid = cellGrid;
 }
 
 void _Game::CellsManager::RandomInitialiseGrid()
@@ -30,6 +34,48 @@ void _Game::CellsManager::RandomInitialiseGrid()
         {
             cellGrid[r][c] = CellState( (int) (rand()%10 < 3) );
         }
+    }
+    // store initial configuration for calls to Restart()
+    initGrid = cellGrid;
+}
+
+
+// --- restart / pause ---
+void _Game::CellsManager::Restart()
+{
+    generationCount = 0;
+    cellGrid = initGrid;
+}
+
+void _Game::CellsManager::Pause()
+{   
+    std::cout << "\nGame has been paused. Enter any key to resume:\n> ";
+    _getch(); // wait for key input
+    system("cls||clear");
+}
+
+char _Game::CellsManager::CheckForUserInput()
+{
+    char c = 'z';
+    if( _kbhit() ) { c = _getch(); }
+    return c;
+}
+
+void _Game::CellsManager::ProcessUserInput(const char& c)
+{
+    switch(c)
+    {
+        case 'r':
+        {
+            Restart();
+            break;
+        }
+        case 'p':
+        {
+            Pause();
+            break;
+        }
+        default: {}
     }
 }
 
@@ -66,17 +112,15 @@ bool _Game::CellsManager::CellLives(bool isAlive, int neighbours)
     return (isAlive) ? neighbours == 2 || neighbours == 3 : neighbours == 3;
 }
 
-_Game::Grid _Game::CellsManager::AdvanceCellGrid(Grid& grid) // change to modify the input grid (void return)?
+void _Game::CellsManager::AdvanceCellGrid(Grid& grid)
 {
-    Grid nextGrid{};
     for(int r=0; r<ROWS; r++)
     {
         for(int c=0; c<COLS; c++)
         {
-            nextGrid[r][c] = CellState( (int)CellLives(grid[r][c], CountNeighbours(grid, r, c) ) );
+            grid[r][c] = CellState( (int)CellLives(grid[r][c], CountNeighbours(grid, r, c) ) );
         }
     }
-    return nextGrid;
 }
 
 
@@ -85,6 +129,11 @@ void _Game::CellsManager::ClearScreen()
 {
     COORD cursorPosition(0,0);
     SetConsoleCursorPosition( GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition );
+}
+
+void _Game::CellsManager::PrintCommands()
+{
+    std::cout << "Inputs:  'r' - restart , 'p' - pause , 'q' - quit\n";
 }
 
 void _Game::CellsManager::PrintGrid(Grid& grid)
@@ -117,11 +166,20 @@ void _Game::CellsManager::Run()
 
     while(true)
     {
+        ClearScreen();
+        PrintCommands();
         PrintGrid(cellGrid);
         PrintInfo();
-        cellGrid = AdvanceCellGrid(cellGrid);
-        //std::cin.ignore(); // wait for key input
+        AdvanceCellGrid(cellGrid);
+
+        char userRequest = CheckForUserInput();
+        if(userRequest == 'q') { break; }
+        else if(userRequest != 'z')
+        { 
+            ProcessUserInput(userRequest);
+            continue; 
+        }
+
         std::this_thread::sleep_for(std::chrono::milliseconds(1200));
-        ClearScreen();
     }
 }
