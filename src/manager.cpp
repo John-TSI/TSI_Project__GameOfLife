@@ -7,8 +7,6 @@
 #include<chrono>
 #include<thread>
 #include"../inc/manager.hpp"
-//#include"../inc/mingw.invoke.h"
-//#include"../inc/mingw.thread.h" 
 
 
 // --- initialise ---
@@ -37,6 +35,37 @@ void _Game::CellsManager::RandomInitialiseGrid()
     }
     // store initial configuration for calls to Restart()
     initGrid = cellGrid;
+}
+
+void _Game::CellsManager::Initialise(bool& validInput)
+{
+    std::cout << "\nSelect an initialisation method:\n";
+    std::cout << "----------------------------------\n";
+    std::cout << "1 ...... Seeded\n";
+    std::cout << "2 ...... Randomised\n";
+    std::cout << "----------------------------------\n> ";
+    int req{0};
+    std::cin >> req;
+
+    switch(req)
+    {
+        case 1:
+        {
+            SeedInitialiseGrid(seed);
+            validInput = true;
+            break;
+        }
+        case 2:
+        {
+            RandomInitialiseGrid();
+            validInput = true;
+            break;
+        }
+        default:
+        {
+            std::cout << "Invalid input, review the options and try again.\n";
+        }
+    }
 }
 
 
@@ -159,10 +188,10 @@ void _Game::CellsManager::PrintInfo()
 
 void _Game::CellsManager::Run()
 {
-    system("cls||clear");
-
-    //SeedInitialiseGrid(seed);
-    RandomInitialiseGrid();
+    system("cls");
+    bool validInput{false};
+    while(!validInput) { Initialise(validInput); }
+    system("cls");
 
     while(true)
     {
@@ -180,6 +209,6 @@ void _Game::CellsManager::Run()
             continue; 
         }
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(1200));
+        std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP));
     }
 }
